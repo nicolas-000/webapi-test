@@ -15,7 +15,8 @@ namespace WebApiTest.Services
 
                 return new User
                 {
-                    Username = userClaims.FirstOrDefault(i => i.Type == ClaimTypes.NameIdentifier)?.Value,
+                    Id = Guid.Parse(userClaims.FirstOrDefault(i => i.Type == ClaimTypes.NameIdentifier)?.Value),
+                    Username = userClaims.FirstOrDefault(i => i.Type == ClaimTypes.Name)?.Value,
                     Email = userClaims.FirstOrDefault(i => i.Type == ClaimTypes.Email)?.Value,
                     Name = userClaims.FirstOrDefault(i => i.Type == ClaimTypes.GivenName)?.Value,
                     Phone = userClaims.FirstOrDefault(i => i.Type == ClaimTypes.MobilePhone)?.Value,
@@ -24,6 +25,21 @@ namespace WebApiTest.Services
             }
 
             return null;
+        }
+
+        public List<User> GetAllUsers()
+        {
+            return UserConstants.Users.ToList();
+        }
+
+        public List<User> GetUsersByRole(string roleName)
+        {
+            return UserConstants.Users.Where(u => u.Role.ToLower() == roleName.ToLower()).ToList();
+        }
+
+        public User GetUserById(Guid id)
+        {
+            return UserConstants.Users.Find(u => u.Id == id);
         }
     }
 }
